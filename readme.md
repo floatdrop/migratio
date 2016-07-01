@@ -6,9 +6,9 @@
 	<br>
 </h1>
 
-# Migratio [![Build Status](https://travis-ci.org/floatdrop/migratio.svg?branch=master)](https://travis-ci.org/floatdrop/migratio)
-
 > Automated migrations for Postgres
+
+[![Build Status](https://travis-ci.org/floatdrop/migratio.svg?branch=master)](https://travis-ci.org/floatdrop/migratio)
 
 ## Install
 

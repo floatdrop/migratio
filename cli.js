@@ -58,6 +58,7 @@ const options = {
 };
 
 if (command === 'current') {
+	console.log(`  ${chalk.gray('Current batch:')}`);
 	migratio.current(options).catch(error);
 } else if (command === 'up') {
 	migratio.up(options).catch(error);

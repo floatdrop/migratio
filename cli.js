@@ -53,7 +53,7 @@ function error(err) {
 
 const options = {
 	connection: cli.flags.connection || process.env.DATABASE_URL,
-	directory: cli.flags.directory || './fixtures',
+	directory: cli.flags.directory || './migrations',
 	verbose: true
 };
 

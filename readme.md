@@ -109,6 +109,13 @@ Default: `process.env.DATABASE_URL`
 
 Connection string to Postgres database.
 
+##### directory
+
+Type: `string`<br>
+Default: `./migrations`
+
+Directory with migrations.
+
 ##### verbose
 
 Type: `boolean`<br>
@@ -128,6 +135,13 @@ Type: `string`<br>
 Default: `process.env.DATABASE_URL`
 
 Connection string to Postgres database.
+
+##### directory
+
+Type: `string`<br>
+Default: `./migrations`
+
+Directory with migrations.
 
 ##### verbose
 

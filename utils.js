@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports.parseSql = function parseSql(str) {
 	const lines = str.split('\n');
 

@@ -1,7 +1,14 @@
+<h1 align="center">
+	<br>
+	<img width="400" src="https://rawgit.com/floatdrop/migratio/master/media/logotype.png" alt="migratio">
+	<br>
+	<br>
+	<br>
+</h1>
+
 # Migratio [![Build Status](https://travis-ci.org/floatdrop/migratio.svg?branch=master)](https://travis-ci.org/floatdrop/migratio)
 
 > Automated migrations for Postgres
-
 
 ## Install
 

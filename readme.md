@@ -122,15 +122,6 @@ Rollbacks migrations in current batch.
 
 #### options
 
-##### revision
-
-Type: `Number`<br>
-Default: `undefined`
-
-Specifies to which revision number database should be downgraded. By default database will be downgraded to previous batch.
-
-Put `0` here to cleanup database.
-
 ##### connection
 
 Type: `string`<br>

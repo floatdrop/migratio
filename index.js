@@ -8,7 +8,7 @@ const parseSql = require('./utils').parseSql;
 
 function lockup(db) {
 	return db.query(`
-		CREATE TABLE IF NOT EXISTS migrations (
+		CREATE TABLE IF NOT EXISTS migratio (
 			id serial PRIMARY KEY,
 			name text,
 			revision integer,
@@ -16,7 +16,7 @@ function lockup(db) {
 			batch integer
 		);
 
-		LOCK TABLE migrations;
+		LOCK TABLE migratio;
 	`);
 }
 
@@ -93,7 +93,7 @@ function * up(t, options) {
 			yield t.query(up);
 		}
 
-		yield t.query('INSERT INTO migrations (name, revision, batch) VALUES ($1, $2, $3)', [file, revision, currentBatch + 1]);
+		yield t.query('INSERT INTO migratio (name, revision, batch) VALUES ($1, $2, $3)', [file, revision, currentBatch + 1]);
 	}
 }
 
@@ -123,13 +123,13 @@ function * down(t, options) {
 			yield t.query(down);
 		}
 
-		yield t.query('DELETE FROM migrations WHERE id = $1', [migration.id]);
+		yield t.query('DELETE FROM migratio WHERE id = $1', [migration.id]);
 	}
 }
 
 function * current(t, options) {
-	const lastBatch = (yield t.one(`SELECT coalesce(MAX(batch), 0) AS max FROM migrations`)).max;
-	const migrations = yield t.query('SELECT * FROM migrations WHERE batch = $1 ORDER BY id ASC', [lastBatch]);
+	const lastBatch = (yield t.one(`SELECT coalesce(MAX(batch), 0) AS max FROM migratio`)).max;
+	const migrations = yield t.query('SELECT * FROM migratio WHERE batch = $1 ORDER BY id ASC', [lastBatch]);
 
 	if (options.verbose) {
 		migrations.forEach(m => console.log(`    ${m.name}    (batch:${m.batch})`));

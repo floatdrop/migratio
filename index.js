@@ -54,7 +54,7 @@ function byRevision(a, b) {
 }
 
 function * up(t, options) {
-	const latestMigration = ((yield current(t, Object.assign({}, options, {verbose: false}))).pop() || {}).revision || 0;
+	const latestMigration = ((yield current(t, Object.assign({}, options, {revision: undefined, verbose: false}))).pop() || {}).revision || 0;
 	const currentBatch = ((latestMigration || {}).batch || 0);
 
 	const files = (yield fs.readdir(options.directory))
@@ -98,6 +98,11 @@ function * down(t, options) {
 		console.log(`    No migrations found in database`);
 	}
 
+	if (options.revision !== undefined) {
+		// Remove migration with revision from be removed
+		currentBatch.pop();
+	}
+
 	for (let migration of currentBatch) {
 		const filePath = path.resolve(path.join(options.directory, migration.name));
 		const ext = path.extname(migration.name);
@@ -122,8 +127,14 @@ function * down(t, options) {
 }
 
 function * current(t, options) {
-	const lastBatch = (yield t.one(`SELECT coalesce(MAX(batch), 0) AS max FROM $1~`, [options.tableName])).max;
-	const migrations = yield t.query('SELECT * FROM $1~ WHERE batch = $2 ORDER BY id ASC', [options.tableName, lastBatch]);
+	let migrations;
+
+	if (options.revision === undefined) {
+		const lastBatch = (yield t.one(`SELECT coalesce(MAX(batch), 0) AS max FROM $1~`, [options.tableName])).max;
+		migrations = yield t.query('SELECT * FROM $1~ WHERE batch = $2 ORDER BY id ASC', [options.tableName, lastBatch]);
+	} else {
+		migrations = yield t.query('SELECT * FROM $1~ WHERE revision >= $2 ORDER BY id ASC', [options.tableName, options.revision]);
+	}
 
 	if (options.verbose) {
 		migrations.forEach(m => console.log(`    ${m.name}    (batch:${m.batch})`));

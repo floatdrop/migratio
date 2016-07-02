@@ -17,6 +17,27 @@ test.serial('up to revision', async t => {
 	});
 });
 
+test.serial('down to revision', async t => {
+	await migratio.up({
+		directory: './fixtures/js'
+	});
+
+	let batch = await migratio.current();
+	t.is(batch.length, 2);
+
+	await migratio.down({
+		directory: './fixtures/js',
+		revision: 1
+	});
+
+	batch = await migratio.current();
+	t.is(batch.length, 1);
+
+	await migratio.down({
+		directory: './fixtures/js'
+	});
+});
+
 test.serial('js', async t => {
 	await migratio.up({
 		directory: './fixtures/js'

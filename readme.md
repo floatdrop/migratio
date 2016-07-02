@@ -191,6 +191,13 @@ Default: `false`
 
 Enables output.
 
+##### revision
+
+Type: `Number`<br>
+Default: `Infinity`
+
+First revision to show info about.
+
 ##### tableName
 
 Type: `string`<br>

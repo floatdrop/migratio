@@ -11,6 +11,7 @@ function lockup(db) {
 		CREATE TABLE IF NOT EXISTS migrations (
 			id serial PRIMARY KEY,
 			name text,
+			revision integer,
 			migration_time timestamp with time zone DEFAULT timezone('msk'::text, now()) NOT NULL,
 			batch integer
 		);
@@ -70,6 +71,7 @@ function * up(t, options) {
 	for (let file of files) {
 		const filePath = path.resolve(path.join(options.directory, file));
 		const ext = path.extname(file);
+		const revision = parseInt(file, 10);
 
 		if (options.verbose) {
 			console.log(`  ⬆  ${file}    (batch:${currentBatch + 1})`);
@@ -86,7 +88,7 @@ function * up(t, options) {
 			yield t.query(up);
 		}
 
-		yield t.query('INSERT INTO migrations (name, batch) VALUES ($1, $2)', [file, currentBatch + 1]);
+		yield t.query('INSERT INTO migrations (name, revision, batch) VALUES ($1, $2, $3)', [file, revision, currentBatch + 1]);
 	}
 }
 

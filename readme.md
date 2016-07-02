@@ -19,6 +19,8 @@ $ npm install --save migratio
 
 ## Usage
 
+Create directory `migrations` with [migrations](#migrations-format) and use migratio:
+
 ```js
 const migratio = require('migratio');
 

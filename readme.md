@@ -96,6 +96,19 @@ CREATE TABLE test (
 DROP TABLE IF EXISTS test;
 ```
 
+## Configuring defaults
+
+Migratio supports overriding default values with `migraio` section in `package.json`:
+
+```js
+{
+	"migratio": {
+		"directory": "migrations",
+		"tableName": "migrations"
+	}
+}
+```
+
 ## API
 
 ### up(options)

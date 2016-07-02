@@ -4,6 +4,7 @@ const path = require('path');
 const co = require('co');
 const fs = require('mz/fs');
 const pgp = require('pg-promise')({noWarnings: true});
+const pkgConf = require('pkg-conf');
 const parseSql = require('./utils').parseSql;
 
 function lockup(db, options) {
@@ -26,7 +27,7 @@ function transactio(work) {
 			connection: process.env.DATABASE_URL,
 			directory: './migrations',
 			tableName: 'migratio'
-		}, options);
+		}, pkgConf.sync('migratio'), options);
 
 		const db = pgp(options.connection);
 		try {

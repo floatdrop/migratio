@@ -45,14 +45,6 @@ function validFileName(file) {
 	return /^\d+/.test(file);
 }
 
-function greaterThan(revision) {
-	return function (file) {
-		const fileRevision = parseInt(file, 10);
-
-		return fileRevision > revision;
-	};
-}
-
 function byRevision(a, b) {
 	const aRev = parseInt(a, 10);
 	const bRev = parseInt(b, 10);
@@ -61,12 +53,13 @@ function byRevision(a, b) {
 }
 
 function * up(t, options) {
-	const latestMigration = (yield current(t, {verbose: false})).pop();
+	const latestMigration = ((yield current(t, {verbose: false})).pop() || {}).revision || 0;
 	const currentBatch = ((latestMigration || {}).batch || 0);
 
 	const files = (yield fs.readdir(options.directory))
 		.filter(validFileName)
-		.filter(greaterThan(currentBatch))
+		.filter(file => parseInt(file, 10) > latestMigration)
+		.filter(file => parseInt(file, 10) <= (options.revision || Infinity))
 		.sort(byRevision);
 
 	if (files.length === 0 && options.verbose) {

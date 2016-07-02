@@ -118,6 +118,13 @@ Default: `./migrations`
 
 Directory with migrations.
 
+##### revision
+
+Type: `Number`<br>
+Default: `Infinity`
+
+Latest revision to up to.
+
 ##### verbose
 
 Type: `boolean`<br>

@@ -5,7 +5,34 @@ const co = require('co');
 const fs = require('mz/fs');
 const pgp = require('pg-promise')({noWarnings: true});
 const pkgConf = require('pkg-conf');
-const parseSql = require('./utils').parseSql;
+
+function parseSql(str) {
+	const lines = str.split('\n');
+
+	const result = {
+		up: '',
+		down: '',
+		trash: ''
+	};
+
+	let current = 'trash';
+
+	for (let line of lines) {
+		if (line.indexOf('-- +migrate Up') === 0) {
+			current = 'up';
+			continue;
+		}
+
+		if (line.indexOf('-- +migrate Down') === 0) {
+			current = 'down';
+			continue;
+		}
+
+		result[current] = result[current] + line + '\n';
+	}
+
+	return result;
+}
 
 function lockup(db, options) {
 	return db.query(`

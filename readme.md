@@ -132,6 +132,13 @@ Default: `false`
 
 Enables output.
 
+##### tableName
+
+Type: `string`<br>
+Default: `migratio`
+
+Table in which migratio will store metadata.
+
 ### down(options)
 
 Rollbacks migrations in current batch.
@@ -159,6 +166,13 @@ Default: `false`
 
 Enables output.
 
+##### tableName
+
+Type: `string`<br>
+Default: `migratio`
+
+Table in which migratio will store metadata.
+
 ### current(options)
 
 Shows current batch.
@@ -177,6 +191,12 @@ Default: `false`
 
 Enables output.
 
+##### tableName
+
+Type: `string`<br>
+Default: `migratio`
+
+Table in which migratio will store metadata.
 
 ## CLI
 

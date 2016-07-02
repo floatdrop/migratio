@@ -6,9 +6,9 @@ const fs = require('mz/fs');
 const pgp = require('pg-promise')({noWarnings: true});
 const parseSql = require('./utils').parseSql;
 
-function lockup(db) {
+function lockup(db, options) {
 	return db.query(`
-		CREATE TABLE IF NOT EXISTS migratio (
+		CREATE TABLE IF NOT EXISTS $1~ (
 			id serial PRIMARY KEY,
 			name text,
 			revision integer,
@@ -16,20 +16,21 @@ function lockup(db) {
 			batch integer
 		);
 
-		LOCK TABLE migratio;
-	`);
+		LOCK TABLE $1~;
+	`, [options.tableName]);
 }
 
 function transactio(work) {
 	return function (options) {
 		options = Object.assign({
 			connection: process.env.DATABASE_URL,
-			directory: './migrations'
+			directory: './migrations',
+			tableName: 'migratio'
 		}, options);
 
 		const db = pgp(options.connection);
 		try {
-			return db.tx(t => lockup(t).then(() => work(t, options)));
+			return db.tx(t => lockup(t, options).then(() => work(t, options)));
 		} finally {
 			pgp.end();
 		}
@@ -53,7 +54,7 @@ function byRevision(a, b) {
 }
 
 function * up(t, options) {
-	const latestMigration = ((yield current(t, {verbose: false})).pop() || {}).revision || 0;
+	const latestMigration = ((yield current(t, Object.assign({}, options, {verbose: false}))).pop() || {}).revision || 0;
 	const currentBatch = ((latestMigration || {}).batch || 0);
 
 	const files = (yield fs.readdir(options.directory))
@@ -86,12 +87,12 @@ function * up(t, options) {
 			yield t.query(up);
 		}
 
-		yield t.query('INSERT INTO migratio (name, revision, batch) VALUES ($1, $2, $3)', [file, revision, currentBatch + 1]);
+		yield t.query(`INSERT INTO $1~ (name, revision, batch) VALUES ($2, $3, $4)`, [options.tableName, file, revision, currentBatch + 1]);
 	}
 }
 
 function * down(t, options) {
-	const currentBatch = yield current(t, {verbose: false});
+	const currentBatch = yield current(t, Object.assign({}, options, {verbose: false}));
 
 	if (currentBatch.length === 0 && options.verbose) {
 		console.log(`    No migrations found in database`);
@@ -116,13 +117,13 @@ function * down(t, options) {
 			yield t.query(down);
 		}
 
-		yield t.query('DELETE FROM migratio WHERE id = $1', [migration.id]);
+		yield t.query('DELETE FROM $1~ WHERE id = $2', [options.tableName, migration.id]);
 	}
 }
 
 function * current(t, options) {
-	const lastBatch = (yield t.one(`SELECT coalesce(MAX(batch), 0) AS max FROM migratio`)).max;
-	const migrations = yield t.query('SELECT * FROM migratio WHERE batch = $1 ORDER BY id ASC', [lastBatch]);
+	const lastBatch = (yield t.one(`SELECT coalesce(MAX(batch), 0) AS max FROM $1~`, [options.tableName])).max;
+	const migrations = yield t.query('SELECT * FROM $1~ WHERE batch = $2 ORDER BY id ASC', [options.tableName, lastBatch]);
 
 	if (options.verbose) {
 		migrations.forEach(m => console.log(`    ${m.name}    (batch:${m.batch})`));

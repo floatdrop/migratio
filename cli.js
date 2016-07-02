@@ -12,6 +12,7 @@ const cli = meow(`
       -d, --directory    Directory with migrations files [Default: ./migrations]
       -c, --connection   Connection string to Postgres [Default: $POSTGRES]
 	  -r, --revision     Specify revision to up/down to
+	  -t, --table        Table name for metadata [Default: migratio]
 
     Commands
       up             Applies all migrations from current to latest
@@ -43,6 +44,7 @@ const cli = meow(`
 		d: 'directory',
 		c: 'connection',
 		r: 'revision',
+		t: 'table',
 		h: 'help'
 	}
 });
@@ -63,6 +65,7 @@ const options = {
 	connection: cli.flags.connection,
 	directory: cli.flags.directory,
 	revision: cli.flags.revision,
+	tableName: cli.flags.table,
 	verbose: true
 };
 

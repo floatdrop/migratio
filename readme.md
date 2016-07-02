@@ -184,8 +184,8 @@ $ migratio --help
     migratio [command] [options]
 
   Options
-    --directory    Directory with migrations files [Default: ./migrations]
-    --connection   Connection string to Postgres [Default: $DATABASE_URL]
+    -d, --directory    Directory with migrations files [Default: ./migrations]
+    -c, --connection   Connection string to Postgres [Default: $DATABASE_URL]
 
   Commands
 

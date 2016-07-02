@@ -9,8 +9,8 @@ const cli = meow(`
       migratio [command] [options]
 
     Options
-      --directory    Directory with migrations files [Default: ./migrations]
-      --connection   Connection string to Postgres [Default: $POSTGRES]
+      -d, --directory    Directory with migrations files [Default: ./migrations]
+      -c, --connection   Connection string to Postgres [Default: $POSTGRES]
 
     Commands
       up             Applies all migrations from current to latest
@@ -37,7 +37,13 @@ const cli = meow(`
         ⬆ 000004-files.sql   (batch:3)
         ⬆ 000005-images.sql  (batch:3)
         ⬆ 000006-posts.sql   (batch:3)
-`);
+`, {
+	alias: {
+		d: 'directory',
+		c: 'connection',
+		h: 'help'
+	}
+});
 
 const command = cli.input[0] || 'current';
 
@@ -52,8 +58,8 @@ function error(err) {
 }
 
 const options = {
-	connection: cli.flags.connection || process.env.DATABASE_URL,
-	directory: cli.flags.directory || './migrations',
+	connection: cli.flags.connection,
+	directory: cli.flags.directory,
 	verbose: true
 };
 

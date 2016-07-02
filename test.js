@@ -1,30 +1,36 @@
+process.env.DATABASE_URL = 'postgres://localhost:5432/test';
+
 import test from 'ava';
 import migratio from './';
 
-test.serial('up', async t => {
+test.serial('js', async t => {
 	await migratio.up({
-		directory: './fixtures',
-		connection: 'postgres://localhost:5432/test'
+		directory: './fixtures/js'
 	});
 
-	const batch = await migratio.current({
-		directory: './fixtures',
-		connection: 'postgres://localhost:5432/test'
+	let batch = await migratio.current();
+	t.is(batch.length, 1);
+
+	await migratio.down({
+		directory: './fixtures/js'
 	});
 
-	t.is(batch.length, 2);
+	batch = await migratio.current();
+	t.is(batch.length, 0);
 });
 
-test.serial('down', async t => {
+test.serial('sql', async t => {
+	await migratio.up({
+		directory: './fixtures/sql'
+	});
+
+	let batch = await migratio.current();
+	t.is(batch.length, 1);
+
 	await migratio.down({
-		directory: './fixtures',
-		connection: 'postgres://localhost:5432/test'
+		directory: './fixtures/sql'
 	});
 
-	const batch = await migratio.current({
-		directory: './fixtures',
-		connection: 'postgres://localhost:5432/test'
-	});
-
+	batch = await migratio.current();
 	t.is(batch.length, 0);
 });

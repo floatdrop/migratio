@@ -22,6 +22,11 @@ function lockup(db) {
 
 function transactio(work) {
 	return function (options) {
+		options = Object.assign({
+			connection: process.env.DATABASE_URL,
+			directory: './migrations'
+		}, options);
+
 		const db = pgp(options.connection);
 		try {
 			return db.tx(t => lockup(t).then(() => work(t, options)));

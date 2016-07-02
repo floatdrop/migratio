@@ -1,4 +1,4 @@
-module.exports.up = function * (db) {
+exports.up = function * (db) {
 	yield db.query(`
 		CREATE TABLE test (
 			id serial PRIMARY KEY
@@ -6,7 +6,7 @@ module.exports.up = function * (db) {
 	`);
 };
 
-module.exports.down = function * (db) {
+exports.down = function * (db) {
 	yield db.query(`
 		DROP TABLE IF EXISTS test;
 	`);

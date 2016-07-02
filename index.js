@@ -79,7 +79,7 @@ function * up(t, options) {
 		const revision = parseInt(file, 10);
 
 		if (options.verbose) {
-			console.log(`  ⬆  ${file}    (batch:${currentBatch + 1})`);
+			console.log(`  ↑  ${file}    (batch:${currentBatch + 1})`);
 		}
 
 		if (ext === '.js') {
@@ -109,7 +109,7 @@ function * down(t, options) {
 		const ext = path.extname(migration.name);
 
 		if (options.verbose) {
-			console.log(`  ⬇  ${migration.name}    (batch:${migration.batch})`);
+			console.log(`  ↓  ${migration.name}    (batch:${migration.batch})`);
 		}
 
 		if (ext === '.js') {

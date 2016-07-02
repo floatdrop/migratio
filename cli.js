@@ -27,16 +27,16 @@ const cli = meow(`
 
       $ migratio down
 
-        ⬇ 000005-images.sql  (batch:3)
-        ⬇ 000004-files.sql   (batch:3)
-        ⬇ 000003-stats.sql   (batch:3)
+        ↓ 000005-images.sql  (batch:3)
+        ↓ 000004-files.sql   (batch:3)
+        ↓ 000003-stats.sql   (batch:3)
 
       $ migratio up
 
-        ⬆ 000003-stats.sql   (batch:3)
-        ⬆ 000004-files.sql   (batch:3)
-        ⬆ 000005-images.sql  (batch:3)
-        ⬆ 000006-posts.sql   (batch:3)
+        ↑ 000003-stats.sql   (batch:3)
+        ↑ 000004-files.sql   (batch:3)
+        ↑ 000005-images.sql  (batch:3)
+        ↑ 000006-posts.sql   (batch:3)
 `, {
 	alias: {
 		d: 'directory',

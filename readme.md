@@ -36,15 +36,15 @@ await migratio.up({
 	connection: 'postgres://localhost/db',
 	verbose: true
 });
-// ⬆ 000006-posts.sql   (batch:4)
+// ↑ 000006-posts.sql   (batch:4)
 
 await migratio.down({
 	connection: 'postgres://localhost/db',
 	verbose: true
 });
-// ⬇ 000005-images.sql  (batch:3)
-// ⬇ 000004-files.sql   (batch:3)
-// ⬇ 000003-stats.sql   (batch:3)
+// ↓ 000005-images.sql  (batch:3)
+// ↓ 000004-files.sql   (batch:3)
+// ↓ 000003-stats.sql   (batch:3)
 ```
 
 ## Migrations format
@@ -203,16 +203,16 @@ $ migratio --help
 
     $ migratio down
 
-      ⬇ 000005-images.sql  (batch:3)
-      ⬇ 000004-files.sql   (batch:3)
-      ⬇ 000003-stats.sql   (batch:3)
+      ↓ 000005-images.sql  (batch:3)
+      ↓ 000004-files.sql   (batch:3)
+      ↓ 000003-stats.sql   (batch:3)
 
     $ migratio up
 
-      ⬆ 000003-stats.sql   (batch:3)
-      ⬆ 000004-files.sql   (batch:3)
-      ⬆ 000005-images.sql  (batch:3)
-      ⬆ 000006-posts.sql   (batch:3)
+      ↑ 000003-stats.sql   (batch:3)
+      ↑ 000004-files.sql   (batch:3)
+      ↑ 000005-images.sql  (batch:3)
+      ↑ 000006-posts.sql   (batch:3)
 ```
 
 

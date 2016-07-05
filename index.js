@@ -131,7 +131,7 @@ function * down(t, options) {
 		currentBatch.pop();
 	}
 
-	for (let migration of currentBatch) {
+	for (let migration of currentBatch.reverse()) {
 		const filePath = path.resolve(path.join(options.directory, migration.name));
 		const ext = path.extname(migration.name);
 

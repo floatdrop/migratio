@@ -1,6 +1,6 @@
 {
   "name": "migratio",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Postgres migrations",
   "license": "MIT",
   "repository": "floatdrop/migratio",

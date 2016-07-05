@@ -1,7 +1,8 @@
 exports.up = function * (db) {
 	yield db.query(`
 		CREATE TABLE test2 (
-			id serial PRIMARY KEY
+			id serial PRIMARY KEY,
+			test int REFERENCES test (id)
 		)
 	`);
 };

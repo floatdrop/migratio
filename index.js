@@ -128,7 +128,7 @@ function * down(t, options) {
 
 	if (options.revision !== undefined) {
 		// Remove migration with revision from be removed
-		currentBatch.pop();
+		currentBatch.shift();
 	}
 
 	for (let migration of currentBatch.reverse()) {

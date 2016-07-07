@@ -138,6 +138,13 @@ Default: `Infinity`
 
 Latest revision to up to.
 
+##### unsafe
+
+Type: `Boolean`<br>
+Default: `false`
+
+Disables meta-table locking.
+
 ##### verbose
 
 Type: `boolean`<br>
@@ -172,6 +179,13 @@ Default: `./migrations`
 
 Directory with migrations.
 
+##### unsafe
+
+Type: `Boolean`<br>
+Default: `false`
+
+Disables meta-table locking.
+
 ##### verbose
 
 Type: `boolean`<br>
@@ -196,6 +210,13 @@ Type: `string`<br>
 Default: `process.env.DATABASE_URL`
 
 Connection string to Postgres database.
+
+##### unsafe
+
+Type: `Boolean`<br>
+Default: `false`
+
+Disables meta-table locking.
 
 ##### verbose
 
@@ -235,6 +256,7 @@ $ migratio --help
     -c, --connection   Connection string to Postgres [Default: $DATABASE_URL]
     -r, --revision     Specify revision to up/down to
     -t, --table        Table name for metadata [Default: migratio]
+    --unsafe           Skip table locking and creation
 
   Commands
 

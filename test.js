@@ -69,3 +69,26 @@ test.serial('sql', async t => {
 	batch = await migratio.current();
 	t.is(batch.length, 0);
 });
+
+test.serial('unsafe', async t => {
+	await migratio.up({
+		directory: './fixtures/unsafe',
+		revision: 1
+	});
+
+	await migratio.up({
+		directory: './fixtures/unsafe',
+		revision: 2,
+		unsafe: true
+	});
+
+	let batch = await migratio.current();
+	t.is(batch.length, 2);
+
+	await migratio.down({
+		directory: './fixtures/unsafe'
+	});
+
+	batch = await migratio.current();
+	t.is(batch.length, 0);
+});

@@ -13,6 +13,7 @@ const cli = meow(`
       -c, --connection   Connection string to Postgres [Default: $DATABASE_URL]
       -r, --revision     Specify revision to up/down to
       -t, --table        Table name for metadata [Default: migratio]
+      --unsafe           Skip table locking and creation
 
     Commands
       up             Applies all migrations from current to latest
@@ -66,6 +67,7 @@ const options = {
 	directory: cli.flags.directory,
 	revision: cli.flags.revision,
 	tableName: cli.flags.table,
+	unsafe: cli.flags.unsafe,
 	verbose: true
 };
 

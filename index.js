@@ -34,6 +34,24 @@ function parseSql(str) {
 	return result;
 }
 
+function readMigration(filePath) {
+	const ext = path.extname(filePath);
+
+	if (ext === '.js') {
+		return require(filePath);
+	}
+
+	if (ext === '.sql') {
+		const content = fs.readFileSync(filePath, 'utf8');
+		const migration = parseSql(content);
+		const up = migration.up;
+		const down = migration.down;
+		migration.up = t => t.query(up);
+		migration.down = t => t.query(down);
+		return migration;
+	}
+}
+
 function lockup(db, options) {
 	return db.query(`
 		CREATE TABLE IF NOT EXISTS $1~ (
@@ -53,11 +71,16 @@ function transactio(work) {
 		options = Object.assign({
 			connection: process.env.DATABASE_URL,
 			directory: './migrations',
-			tableName: 'migratio'
+			tableName: 'migratio',
+			unsafe: false
 		}, pkgConf.sync('migratio'), options);
 
 		const db = pgp(options.connection);
 		try {
+			if (options.unsafe === true) {
+				return work(db, options);
+			}
+
 			return db.tx(t => lockup(t, options).then(() => work(t, options)));
 		} finally {
 			pgp.end();
@@ -97,23 +120,14 @@ function * up(t, options) {
 
 	for (let file of files) {
 		const filePath = path.resolve(path.join(options.directory, file));
-		const ext = path.extname(file);
 		const revision = parseInt(file, 10);
 
 		if (options.verbose) {
 			console.log(`  ↑  ${file}    (batch:${currentBatch + 1})`);
 		}
 
-		if (ext === '.js') {
-			const migration = require(filePath);
-			yield migration.up(t);
-		}
-
-		if (ext === '.sql') {
-			const content = yield fs.readFile(filePath, 'utf8');
-			const up = parseSql(content).up;
-			yield t.query(up);
-		}
+		const migration = readMigration(filePath);
+		yield migration.up(t);
 
 		yield t.query(`INSERT INTO $1~ (name, revision, batch) VALUES ($2, $3, $4)`, [options.tableName, file, revision, currentBatch + 1]);
 	}
@@ -133,22 +147,13 @@ function * down(t, options) {
 
 	for (let migration of currentBatch.reverse()) {
 		const filePath = path.resolve(path.join(options.directory, migration.name));
-		const ext = path.extname(migration.name);
 
 		if (options.verbose) {
 			console.log(`  ↓  ${migration.name}    (batch:${migration.batch})`);
 		}
 
-		if (ext === '.js') {
-			const migration = require(filePath);
-			yield migration.down(t);
-		}
-
-		if (ext === '.sql') {
-			const content = yield fs.readFile(filePath, 'utf8');
-			const down = parseSql(content).down;
-			yield t.query(down);
-		}
+		const currentMigration = readMigration(filePath);
+		yield currentMigration.down(t);
 
 		yield t.query('DELETE FROM $1~ WHERE id = $2', [options.tableName, migration.id]);
 	}

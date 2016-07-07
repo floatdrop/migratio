@@ -256,7 +256,7 @@ $ migratio --help
     -c, --connection   Connection string to Postgres [Default: $DATABASE_URL]
     -r, --revision     Specify revision to up/down to
     -t, --table        Table name for metadata [Default: migratio]
-    --unsafe           Skip table locking and creation
+    --unsafe           Skip transaction and table locking
 
   Commands
 

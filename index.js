@@ -52,18 +52,18 @@ function readMigration(filePath) {
 	}
 }
 
-function lockup(db, options) {
-	return db.query(`
-		CREATE TABLE IF NOT EXISTS $1~ (
-			id serial PRIMARY KEY,
-			name text,
-			revision integer,
-			migration_time timestamp with time zone DEFAULT timezone('msk'::text, now()) NOT NULL,
-			batch integer
-		);
+function ensureTable(db, options) {
+	return db.query(`CREATE TABLE IF NOT EXISTS $1~ (
+		id serial PRIMARY KEY,
+		name text,
+		revision integer,
+		migration_time timestamp with time zone DEFAULT timezone('msk'::text, now()) NOT NULL,
+		batch integer
+	);`, [options.tableName]);
+}
 
-		LOCK TABLE $1~;
-	`, [options.tableName]);
+function lockup(db, options) {
+	return db.query(`LOCK TABLE $1~;`, [options.tableName]);
 }
 
 function transactio(work) {
@@ -78,10 +78,13 @@ function transactio(work) {
 		const db = pgp(options.connection);
 		try {
 			if (options.unsafe === true) {
-				return work(db, options);
+				return ensureTable(db, options)
+					.then(() => work(db, options));
 			}
 
-			return db.tx(t => lockup(t, options).then(() => work(t, options)));
+			return db.tx(t => ensureTable(t, options)
+				.then(() => lockup(t, options))
+				.then(() => work(t, options)));
 		} finally {
 			pgp.end();
 		}

@@ -25,6 +25,9 @@ test.serial('down to revision', async t => {
 	let batch = await migratio.current();
 	t.is(batch.length, 2);
 
+	t.is(batch[0].batch, 1);
+	t.is(batch[1].batch, 1);
+
 	await migratio.down({
 		directory: './fixtures/js',
 		revision: 1
@@ -45,6 +48,9 @@ test.serial('js', async t => {
 
 	let batch = await migratio.current();
 	t.is(batch.length, 2);
+
+	t.is(batch[0].batch, 1);
+	t.is(batch[1].batch, 1);
 
 	await migratio.down({
 		directory: './fixtures/js'
@@ -83,7 +89,15 @@ test.serial('unsafe', async t => {
 	});
 
 	let batch = await migratio.current();
-	t.is(batch.length, 2);
+	t.is(batch.length, 1);
+	t.is(batch[0].batch, 2);
+
+	await migratio.down({
+		directory: './fixtures/unsafe'
+	});
+
+	batch = await migratio.current();
+	t.is(batch.length, 1);
 
 	await migratio.down({
 		directory: './fixtures/unsafe'

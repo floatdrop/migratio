@@ -108,12 +108,13 @@ function byRevision(a, b) {
 }
 
 function * up(t, options) {
-	const latestMigration = ((yield current(t, Object.assign({}, options, {revision: undefined, verbose: false}))).pop() || {}).revision || 0;
-	const currentBatch = ((latestMigration || {}).batch || 0);
+	const latestMigration = (yield current(t, Object.assign({}, options, {revision: undefined, verbose: false}))).pop() || {};
+	const latestRevision = latestMigration.revision || 0;
+	const currentBatch = latestMigration.batch || 0;
 
 	const files = (yield fs.readdir(options.directory))
 		.filter(validFileName)
-		.filter(file => parseInt(file, 10) > latestMigration)
+		.filter(file => parseInt(file, 10) > latestRevision)
 		.filter(file => parseInt(file, 10) <= (options.revision || Infinity))
 		.sort(byRevision);
 

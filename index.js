@@ -110,7 +110,8 @@ function byRevision(a, b) {
 function * up(t, options) {
 	const latestMigration = (yield current(t, Object.assign({}, options, {revision: undefined, verbose: false}))).pop() || {};
 	const latestRevision = latestMigration.revision || 0;
-	const currentBatch = latestMigration.batch || 0;
+	const latestBatch = latestMigration.batch || 0;
+	const currentBatch = latestBatch + 1;
 
 	const files = (yield fs.readdir(options.directory))
 		.filter(validFileName)
@@ -127,13 +128,13 @@ function * up(t, options) {
 		const revision = parseInt(file, 10);
 
 		if (options.verbose) {
-			console.log(`  ↑  ${file}    (batch:${currentBatch + 1})`);
+			console.log(`  ↑  ${file}    (batch:${currentBatch})`);
 		}
 
 		const migration = readMigration(filePath);
 		yield migration.up(t);
 
-		yield t.query(`INSERT INTO $1~ (name, revision, batch) VALUES ($2, $3, $4)`, [options.tableName, file, revision, currentBatch + 1]);
+		yield t.query(`INSERT INTO $1~ (name, revision, batch) VALUES ($2, $3, $4)`, [options.tableName, file, revision, currentBatch]);
 	}
 }
 

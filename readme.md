@@ -124,6 +124,14 @@ Default: `process.env.DATABASE_URL`
 
 Connection string to Postgres database.
 
+
+##### db
+
+Type: `Database`
+
+[Database](http://vitaly-t.github.io/pg-promise/Database.html) object. Will be used _instead_ of `connection`.
+
+
 ##### directory
 
 Type: `string`<br>

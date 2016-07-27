@@ -75,7 +75,7 @@ function transactio(work) {
 			unsafe: false
 		}, pkgConf.sync('migratio'), options);
 
-		const db = pgp(options.connection);
+		const db = options.db || pgp(options.connection);
 		try {
 			if (options.unsafe === true) {
 				return ensureTable(db, options)

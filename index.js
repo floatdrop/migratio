@@ -109,7 +109,7 @@ function byRevision(a, b) {
 
 function * up(t, options) {
 	const latestMigration = (yield current(t, Object.assign({}, options, {revision: undefined, verbose: false}))).pop() || {};
-	const latestRevision = latestMigration.revision || -1;
+	const latestRevision = latestMigration.revision === undefined ? -1 : 0;
 	const latestBatch = latestMigration.batch || 0;
 	const currentBatch = latestBatch + 1;
 

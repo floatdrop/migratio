@@ -76,7 +76,7 @@ test.serial('sql', async t => {
 	t.is(batch.length, 0);
 });
 
-test.only('unsafe', async t => {
+test.serial('unsafe', async t => {
 	await migratio.up({
 		directory: './fixtures/unsafe',
 		revision: 1

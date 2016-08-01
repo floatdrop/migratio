@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 'use strict';
+const path = require('path');
 const meow = require('meow');
 const chalk = require('chalk');
 const migratio = require('./');
@@ -47,6 +48,10 @@ const cli = meow(`
 		r: 'revision',
 		t: 'table',
 		h: 'help'
+	},
+	default: {
+		directory: path.join(process.cwd(), 'migrations'),
+		table: 'migratio'
 	}
 });
 

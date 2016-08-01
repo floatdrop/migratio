@@ -110,7 +110,7 @@ function byRevision(a, b) {
 function * up(t, options) {
 	const latestMigration = (yield current(t, Object.assign({}, options, {revision: undefined, verbose: false}))).pop() || {};
 	const latestRevision = latestMigration.revision || -1;
-	const latestBatch = latestMigration.batch || -1;
+	const latestBatch = latestMigration.batch || 0;
 	const currentBatch = latestBatch + 1;
 
 	const files = (yield fs.readdir(options.directory))

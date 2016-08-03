@@ -76,6 +76,7 @@ function transactio(work) {
 		}, pkgConf.sync('migratio'), options);
 
 		const db = options.db || pgp(options.connection);
+
 		try {
 			if (options.unsafe === true) {
 				return ensureTable(db, options)
@@ -118,7 +119,7 @@ function * up(t, options) {
 		.filter(file => parseInt(file, 10) > latestRevision)
 		.filter(file => parseInt(file, 10) <= (options.revision || Infinity))
 		.sort(byRevision);
-	console.log(latestRevision, files);
+
 	if (files.length === 0 && options.verbose) {
 		console.log(`    Database is up to date`);
 	}

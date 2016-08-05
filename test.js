@@ -1,3 +1,4 @@
+/* eslint-disable import/imports-first */
 process.env.DATABASE_URL = 'postgres://localhost:5432/test';
 
 import test from 'ava';

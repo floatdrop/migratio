@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 'use strict';
-const path = require('path');
 const meow = require('meow');
 const chalk = require('chalk');
 const migratio = require('./');
@@ -13,7 +12,7 @@ const cli = meow(`
       -d, --directory    Directory with migrations files [Default: ./migrations]
       -c, --connection   Connection string to Postgres [Default: $DATABASE_URL]
       -r, --revision     Specify revision to up/down to
-      -t, --table        Table name for metadata [Default: migratio]
+      -t, --tableName    Table name for metadata [Default: migratio]
       --unsafe           Skip transaction and table locking
 
     Commands
@@ -46,13 +45,10 @@ const cli = meow(`
 		d: 'directory',
 		c: 'connection',
 		r: 'revision',
-		t: 'table',
+		t: 'tableName',
 		h: 'help'
-	},
-	default: {
-		directory: path.join(process.cwd(), 'migrations'),
-		table: 'migratio'
 	}
+	// Do not set defaults, it will unset values in package.json
 });
 
 const command = cli.input[0] || 'current';
@@ -67,14 +63,8 @@ function error(err) {
 	console.error();
 }
 
-const options = {
-	connection: cli.flags.connection,
-	directory: cli.flags.directory,
-	revision: cli.flags.revision,
-	tableName: cli.flags.table,
-	unsafe: cli.flags.unsafe,
-	verbose: true
-};
+const options = cli.flags;
+options.verbose = true;
 
 if (command === 'current') {
 	console.log(`  ${chalk.gray('Current batch:')}`);

@@ -13,6 +13,7 @@ const cli = meow(`
       -c, --connection   Connection string to Postgres [Default: $DATABASE_URL]
       -r, --revision     Specify revision to up/down to
       -t, --tableName    Table name for metadata [Default: migratio]
+      -s, --schema       Schema name for table with metadata [Default: public]
       --unsafe           Skip transaction and table locking
 
     Commands
@@ -46,6 +47,7 @@ const cli = meow(`
 		c: 'connection',
 		r: 'revision',
 		t: 'tableName',
+		s: 'schema',
 		h: 'help'
 	}
 	// Do not set defaults, it will unset values in package.json

@@ -53,13 +53,15 @@ function readMigration(filePath) {
 }
 
 function ensureTable(db, options) {
-	return db.query(`CREATE TABLE IF NOT EXISTS $1~ (
-		id serial PRIMARY KEY,
-		name text,
-		revision integer,
-		migration_time timestamp with time zone DEFAULT timezone('msk'::text, now()) NOT NULL,
-		batch integer
-	);`, [options.tableName]);
+	return db.query(`CREATE SCHEMA IF NOT EXISTS $1~;`, [options.schema])
+		.then(() => db.query(`SET search_path TO $1~;`, [options.schema]))
+		.then(() => db.query(`CREATE TABLE IF NOT EXISTS $1~ (
+			id serial PRIMARY KEY,
+			name text,
+			revision integer,
+			migration_time timestamp with time zone DEFAULT timezone('msk'::text, now()) NOT NULL,
+			batch integer
+		);`, [options.tableName]));
 }
 
 function lockup(db, options) {
@@ -72,6 +74,7 @@ function transactio(work) {
 			connection: process.env.DATABASE_URL,
 			directory: './migrations',
 			tableName: 'migratio',
+			schema: 'public',
 			unsafe: false
 		}, pkgConf.sync('migratio'), options);
 

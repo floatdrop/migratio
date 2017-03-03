@@ -38,7 +38,7 @@ function readMigration(filePath) {
 	const ext = path.extname(filePath);
 
 	if (ext === '.js') {
-		return require(filePath);
+		return require(filePath); // eslint-disable-line import/no-dynamic-require
 	}
 
 	if (ext === '.sql') {

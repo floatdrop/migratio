@@ -2,7 +2,7 @@
 
 const path = require('path');
 const fs = require('fs');
-const {coroutine} = require('bluebird');
+const coroutine = require('bluebird').coroutine;
 const pgp = require('pg-promise')({noWarnings: true});
 const pkgConf = require('pkg-conf');
 const isAsyncSupported = require('is-async-supported');

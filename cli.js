@@ -63,6 +63,7 @@ function error(err) {
 	console.error();
 	console.error(chalk.gray(err.stack));
 	console.error();
+	process.exit(1);
 }
 
 const options = cli.flags;

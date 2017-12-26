@@ -3,7 +3,6 @@
 const path = require('path');
 const fs = require('fs');
 const coroutine = require('bluebird').coroutine;
-const pgp = require('pg-promise')({noWarnings: true});
 const pkgConf = require('pkg-conf');
 const isAsyncSupported = require('is-async-supported');
 const requireFromString = require('require-from-string');
@@ -85,7 +84,12 @@ function transactio(work) {
 			unsafe: false
 		}, pkgConf.sync('migratio'), options);
 
-		const db = options.db || pgp(options.connection);
+		let db = options.db;
+		if (db === undefined) {
+			const pgp = require('pg-promise')({noWarnings: true});
+			db = pgp(options.connection);
+		}
+
 		try {
 			if (options.unsafe === true) {
 				return ensureTable(db, options)
@@ -96,7 +100,9 @@ function transactio(work) {
 				.then(() => lockup(t, options))
 				.then(() => work(t, options)));
 		} finally {
-			pgp.end();
+			if (options.db === undefined) {
+				pgp.end();
+			}
 		}
 	};
 }

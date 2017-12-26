@@ -92,20 +92,14 @@ function transactio(work) {
 			db = pgp(options.connection);
 		}
 
-		try {
-			if (options.unsafe === true) {
-				return ensureTable(db, options)
-					.then(() => work(db, options));
-			}
-
-			return db.tx(t => ensureTable(t, options)
-				.then(() => lockup(t, options))
-				.then(() => work(t, options)));
-		} finally {
-			if (options.db === undefined) {
-				pgp.end();
-			}
+		if (options.unsafe === true) {
+			return ensureTable(db, options)
+				.then(() => work(db, options));
 		}
+
+		return db.tx(t => ensureTable(t, options)
+			.then(() => lockup(t, options))
+			.then(() => work(t, options)));
 	};
 }
 

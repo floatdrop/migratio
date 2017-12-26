@@ -9,7 +9,7 @@ test.serial('up to revision', async t => {
 		revision: 1
 	});
 
-	let batch = await migratio.current();
+	const batch = await migratio.current();
 	t.is(batch.length, 1);
 
 	await migratio.down({

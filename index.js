@@ -18,7 +18,7 @@ function parseSql(str) {
 
 	let current = 'trash';
 
-	for (let line of lines) {
+	for (const line of lines) {
 		if (line.indexOf('-- +migrate Up') === 0) {
 			current = 'up';
 			continue;
@@ -85,8 +85,10 @@ function transactio(work) {
 		}, pkgConf.sync('migratio'), options);
 
 		let db = options.db;
+		let pgp;
+
 		if (db === undefined) {
-			const pgp = require('pg-promise')({noWarnings: true});
+			pgp = require('pg-promise')({noWarnings: true});
 			db = pgp(options.connection);
 		}
 
@@ -163,7 +165,7 @@ const up = coroutine(function * (t, options) {
 		console.log(`    Database is up to date`);
 	}
 
-	for (let file of files) {
+	for (const file of files) {
 		const filePath = path.resolve(path.join(options.directory, file));
 		const revision = parseInt(file, 10);
 
@@ -190,7 +192,7 @@ const down = coroutine(function * (t, options) {
 		currentBatch.shift();
 	}
 
-	for (let migration of currentBatch.reverse()) {
+	for (const migration of currentBatch.reverse()) {
 		const filePath = path.resolve(path.join(options.directory, migration.name));
 
 		if (options.verbose) {
